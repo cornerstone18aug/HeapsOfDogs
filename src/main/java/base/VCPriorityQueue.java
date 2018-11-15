@@ -1,3 +1,5 @@
+package base;
+
 /**
  * Interface for the priority queue ADT(Abstract Data Type).
  *

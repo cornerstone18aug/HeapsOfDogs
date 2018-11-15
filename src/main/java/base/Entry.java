@@ -1,5 +1,7 @@
+package base;
+
 /**
- * Class for the Entry element of VCPriorityQueue
+ * Class for the base.Entry element of base.VCPriorityQueue
  *
  * @author Derrick Park
  */
@@ -11,7 +13,7 @@ public class Entry<K extends Comparable,V> {
      * Returns the key stored in this entry.
      * @return the entry's key
      */
-    K getKey(){
+    public K getKey(){
         return key;
     }
 
@@ -19,7 +21,7 @@ public class Entry<K extends Comparable,V> {
      * Returns the value stored in this entry.
      * @return the entry's value
      */
-    V getValue(){
+    public V getValue(){
         return value;
     }
 
