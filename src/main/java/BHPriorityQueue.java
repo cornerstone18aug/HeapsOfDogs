@@ -45,14 +45,9 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
       throw new IllegalArgumentException();
     }
 
-    // Create new Entry
+    // Create new Entry and add
     Entry<K, V> newEntry = new Entry<>(key, value);
     this.heapList.add(newEntry);
-
-    if (this.heapList.size() == 1) {
-      // First element
-      return newEntry;
-    }
 
     int currentIndex;
     int parentIndex;
@@ -61,40 +56,36 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     Entry<K, V> adjacentEntry;
 
     while (!isRoot(newEntry)) {
-      currentIndex = getCurrentIndex(newEntry);
-      parentIndex = getParentIndex(currentIndex);
-      parentEntry = heapList.get(parentIndex);
+      currentIndex = this.getCurrentIndex(newEntry);
+      // Get parent
+      parentIndex = this.getParentIndex(currentIndex);
+      parentEntry = this.heapList.get(parentIndex);
 
+      // If it resides left or right
       if (isLeft(newEntry)) {
-        // Leftmost element
-        switch (compare(parentEntry, newEntry)) {
+        switch (this.compare(parentEntry, newEntry)) {
           case EQUAL:
           case BIGGER:
-            // Swap with parent
-            swap(parentEntry, newEntry);
-
+            this.swap(parentEntry, newEntry);
             break;
           case SMALLER:
             return newEntry;
         }
       } else {
-        // Rightmost element
-        adjacentIndex = getAdjacentIndex(currentIndex);
-        adjacentEntry = heapList.get(adjacentIndex);
-        switch (compare(adjacentEntry, newEntry)) {
-          // Adjacent was same or smaller
+        // Get adjacent
+        adjacentIndex = this.getAdjacentIndex(currentIndex);
+        adjacentEntry = this.heapList.get(adjacentIndex);
+        switch (this.compare(adjacentEntry, newEntry)) {
           case EQUAL:
           case SMALLER:
             return newEntry;
-          // Adjacent was bigger, compare to parent
           case BIGGER:
-            switch (compare(parentEntry, newEntry)) {
+            switch (this.compare(parentEntry, newEntry)) {
               case EQUAL:
               case SMALLER:
                 return newEntry;
               case BIGGER:
-                // Swap with parent
-                swap(parentEntry, newEntry);
+                this.swap(parentEntry, newEntry);
                 break;
             }
             break;
@@ -120,12 +111,11 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
       return null;
     }
 
-    // Create new Entry
-    int lastIndex= heapList.size() - 1;
-    Entry<K, V> dequeueEntry = getEntry(0);
-    Entry<K, V> lastEntry = getEntry(lastIndex);
-    this.heapList.remove(lastEntry);
-    this.heapList.set(0 ,lastEntry);
+    // Swap bottom and top
+    Entry<K, V> resultEntry = this.getEntry(0);
+    Entry<K, V> bottomEntry = this.getEntry(this.heapList.size() - 1);
+    this.heapList.remove(bottomEntry);
+    this.heapList.set(0, bottomEntry);
 
     int currentIndex;
     int leftChildIndex;
@@ -133,45 +123,45 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     Entry<K, V> leftChildEntry;
     Entry<K, V> rightChildEntry;
 
-    int count = 0;
-    while (!isLast(lastEntry) || count == heapList.size()) {
-      currentIndex = getCurrentIndex(lastEntry);
+    while (true) {
+      currentIndex = this.getCurrentIndex(bottomEntry);
+      // Get left child
+      leftChildIndex = this.getLeftChildIndex(currentIndex);
+      leftChildEntry = this.getEntry(leftChildIndex);
+      // Get right child
+      rightChildIndex = this.getRightChildIndex(currentIndex);
+      rightChildEntry = this.getEntry(rightChildIndex);
 
-      leftChildIndex = getLeftChildIndex(currentIndex);
-      leftChildEntry = getEntry(leftChildIndex);
-      
-      rightChildIndex = getRightChildIndex(currentIndex);
-      rightChildEntry = getEntry(rightChildIndex);
-
-      // Either child was null
-      if (leftChildEntry == null || rightChildEntry == null) {
+      // If children were null
+      if (leftChildEntry == null && rightChildEntry == null) {
+        break;
+      } else if (leftChildEntry == null || rightChildEntry == null) {
+        Entry<K, V> comparingChild;
         if (leftChildEntry != null) {
-          if (compare(leftChildEntry, lastEntry) == CompResult.SMALLER) {
-            swap(leftChildEntry, lastEntry);
-          }
-        } else if (rightChildEntry != null){
-          if (compare(rightChildEntry, lastEntry) == CompResult.SMALLER) {
-            swap(rightChildEntry, lastEntry);
-          }
+          comparingChild = leftChildEntry;
+        } else {
+          comparingChild = rightChildEntry;
         }
-        return dequeueEntry;
+        if (this.compare(comparingChild, bottomEntry) == CompResult.SMALLER) {
+          this.swap(comparingChild, bottomEntry);
+        }
+        break;
       }
 
-      // Completely sort between 3(self and 2 children)
-      switch (compare(leftChildEntry, rightChildEntry)) {
+      // Sort either left or right
+      switch (this.compare(leftChildEntry, rightChildEntry)) {
         case BIGGER:
         case EQUAL:
-          swap(lastEntry, rightChildEntry);
+          this.swap(rightChildEntry, bottomEntry);
           break;
         case SMALLER:
-          swap(leftChildEntry, lastEntry);
+          this.swap(leftChildEntry, bottomEntry);
           break;
       }
 
-      ++count;
     }
 
-    return dequeueEntry;
+    return resultEntry;
   }
 
   @Override
@@ -184,19 +174,19 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
   }
 
   private boolean isLeft(Entry<K, V> entry) {
-    return getCurrentIndex(entry) % 2 == 1;
+    return this.getCurrentIndex(entry) % 2 == 1;
   }
 
   private boolean isRight(Entry<K, V> entry) {
-    return getCurrentIndex(entry) % 2 == 0;
+    return this.getCurrentIndex(entry) % 2 == 0;
   }
 
   private boolean isRoot(Entry<K, V> entry) {
-    return getCurrentIndex(entry) == 0;
+    return this.getCurrentIndex(entry) == 0;
   }
 
   private boolean isLast(Entry<K, V> entry) {
-    return getCurrentIndex(entry) == this.heapList.size() - 1;
+    return this.getCurrentIndex(entry) == this.heapList.size() - 1;
   }
 
   private int getCurrentIndex(Entry<K, V> entry) {
@@ -204,21 +194,20 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
   }
 
   private int getParentIndex(Entry<K, V> entry) {
-    return getParentIndex(getCurrentIndex(entry));
+    return this.getParentIndex(getCurrentIndex(entry));
   }
 
   private int getAdjacentIndex(Entry<K, V> entry) {
-    return getAdjacentIndex(getCurrentIndex(entry));
+    return this.getAdjacentIndex(getCurrentIndex(entry));
   }
 
   private int getLeftChildIndex(Entry<K, V> entry) {
-    return getLeftChildIndex(getCurrentIndex(entry));
+    return this.getLeftChildIndex(getCurrentIndex(entry));
   }
 
   private int getRightChildIndex(Entry<K, V> entry) {
-    return getRightChildIndex(getCurrentIndex(entry));
+    return this.getRightChildIndex(getCurrentIndex(entry));
   }
-
 
 
   private int getParentIndex(int currentIndex) {
@@ -250,12 +239,12 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
   }
 
   private void swap(Entry<K, V> e1, Entry<K, V> e2) {
-    int swapIndex = getCurrentIndex(e2);
+    int swapIndex = this.getCurrentIndex(e2);
     this.heapList.set(getCurrentIndex(e1), e2);
     this.heapList.set(swapIndex, e1);
   }
 
-  private Entry<K, V> getEntry(int index){
+  private Entry<K, V> getEntry(int index) {
     Entry<K, V> result = null;
 
     if (this.heapList.size() > index) {
