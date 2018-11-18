@@ -4,6 +4,7 @@ public class Driver {
   public static void main(String[] args) {
     BHPriorityQueue<Integer, Integer> bhQueue = new BHPriorityQueue<>();
 
+
     bhQueue.enqueue(15, null);
     bhQueue.enqueue(2, null);
     bhQueue.enqueue(4, null);
@@ -21,38 +22,22 @@ public class Driver {
     bhQueue.enqueue(12, null);
     bhQueue.enqueue(11, null);
     bhQueue.enqueue(11, null);
-
-    for (Entry<Integer, Integer> entry: bhQueue.heapList){
-      System.out.println(entry.getKey());
-    }
-
-    System.out.println("===============");
+    bhQueue.print("Enqueue");
 
     bhQueue.dequeueMin();
-
-    for (Entry<Integer, Integer> entry: bhQueue.heapList){
-      System.out.println(entry.getKey());
-    }
-
-    System.out.println("===============");
+    bhQueue.print("1st dequeue");
 
     bhQueue.dequeueMin();
+    bhQueue.print("2nd dequeue");
 
-    for (Entry<Integer, Integer> entry: bhQueue.heapList){
-      System.out.println(entry.getKey());
-    }
-
-    System.out.println("===============");
 
     BHPriorityQueue<Integer, Integer> margeQueue = new BHPriorityQueue<>();
-
     margeQueue.enqueue(5, null);
     margeQueue.enqueue(6, null);
     margeQueue.enqueue(1, null);
 
-    for (Entry<Integer, Integer> entry: bhQueue.merge(margeQueue).heapList){
-      System.out.println(entry.getKey());
-    }
+    bhQueue.merge(margeQueue);
+    bhQueue.print("Merge");
 
   }
 }

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue<K, V> {
 
-  List<Entry<K, V>> heapList = new ArrayList<>();
+  private List<Entry<K, V>> heapList = new ArrayList<>();
 
   private enum CompResult {
     EQUAL(0), BIGGER(1), SMALLER(-1);
@@ -177,38 +177,13 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     return this.getCurrentIndex(entry) % 2 == 1;
   }
 
-  private boolean isRight(Entry<K, V> entry) {
-    return this.getCurrentIndex(entry) % 2 == 0;
-  }
-
   private boolean isRoot(Entry<K, V> entry) {
     return this.getCurrentIndex(entry) == 0;
-  }
-
-  private boolean isLast(Entry<K, V> entry) {
-    return this.getCurrentIndex(entry) == this.heapList.size() - 1;
   }
 
   private int getCurrentIndex(Entry<K, V> entry) {
     return this.heapList.indexOf(entry);
   }
-
-  private int getParentIndex(Entry<K, V> entry) {
-    return this.getParentIndex(getCurrentIndex(entry));
-  }
-
-  private int getAdjacentIndex(Entry<K, V> entry) {
-    return this.getAdjacentIndex(getCurrentIndex(entry));
-  }
-
-  private int getLeftChildIndex(Entry<K, V> entry) {
-    return this.getLeftChildIndex(getCurrentIndex(entry));
-  }
-
-  private int getRightChildIndex(Entry<K, V> entry) {
-    return this.getRightChildIndex(getCurrentIndex(entry));
-  }
-
 
   private int getParentIndex(int currentIndex) {
     if (isLeft(this.heapList.get(currentIndex))) {
@@ -252,5 +227,13 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     }
 
     return result;
+  }
+
+  public void print(String msg){
+    System.out.println("===============" + msg);
+    for (Entry<K, V> entry: this.heapList){
+      System.out.println(entry.getKey());
+    }
+    System.out.println("===============" + msg);
   }
 }
