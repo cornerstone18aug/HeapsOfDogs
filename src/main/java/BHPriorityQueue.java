@@ -45,21 +45,23 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
       throw new IllegalArgumentException();
     }
 
-    // Create new Entry and add
+    // Create new Entry and add at the bottom
     Entry<K, V> newEntry = new Entry<>(key, value);
     this.heapList.add(newEntry);
 
+    // Heapify up
     int currentIndex;
     int parentIndex;
     int adjacentIndex;
     Entry<K, V> parentEntry;
     Entry<K, V> adjacentEntry;
 
+    ALL_DONE:
     while (!isRoot(newEntry)) {
       currentIndex = this.getCurrentIndex(newEntry);
       // Get parent
       parentIndex = this.getParentIndex(currentIndex);
-      parentEntry = this.heapList.get(parentIndex);
+      parentEntry = this.getEntry(parentIndex);
 
       // If it resides left or right
       if (isLeft(newEntry)) {
@@ -69,21 +71,21 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
             this.swap(parentEntry, newEntry);
             break;
           case SMALLER:
-            return newEntry;
+            break ALL_DONE;
         }
       } else {
         // Get adjacent
         adjacentIndex = this.getAdjacentIndex(currentIndex);
-        adjacentEntry = this.heapList.get(adjacentIndex);
+        adjacentEntry = this.getEntry(adjacentIndex);
         switch (this.compare(adjacentEntry, newEntry)) {
           case EQUAL:
           case SMALLER:
-            return newEntry;
+            break ALL_DONE;
           case BIGGER:
             switch (this.compare(parentEntry, newEntry)) {
               case EQUAL:
               case SMALLER:
-                return newEntry;
+                break ALL_DONE;
               case BIGGER:
                 this.swap(parentEntry, newEntry);
                 break;
@@ -121,6 +123,7 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
       this.heapList.set(0, bottomEntry);
     }
 
+    // Heapify down
     int currentIndex;
     int leftChildIndex;
     int rightChildIndex;
@@ -233,6 +236,10 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     return result;
   }
 
+  /**
+   * Output all entries into console
+   * @param msg description
+   */
   public void print(String msg){
     System.out.println("===============" + msg);
     for (Entry<K, V> entry: this.heapList){
