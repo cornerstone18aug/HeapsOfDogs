@@ -115,7 +115,12 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     Entry<K, V> resultEntry = this.getEntry(0);
     Entry<K, V> bottomEntry = this.getEntry(this.heapList.size() - 1);
     this.heapList.remove(bottomEntry);
-    this.heapList.set(0, bottomEntry);
+    // When isEmpty, List.set() causes Exception
+    if (this.isEmpty()) {
+      return resultEntry;
+    } else {
+      this.heapList.set(0, bottomEntry);
+    }
 
     int currentIndex;
     int leftChildIndex;
