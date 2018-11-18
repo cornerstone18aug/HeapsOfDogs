@@ -91,7 +91,6 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
             break;
         }
       }
-
     }
 
     return newEntry;
@@ -173,7 +172,7 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
   public BHPriorityQueue<K, V> merge(VCPriorityQueue<K, V> other) {
     while (!other.isEmpty()) {
       Entry<K, V> entry = other.dequeueMin();
-      enqueue(entry.getKey(), entry.getValue());
+      this.enqueue(entry.getKey(), entry.getValue());
     }
     return this;
   }
@@ -191,7 +190,7 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
   }
 
   private int getParentIndex(int currentIndex) {
-    if (isLeft(this.heapList.get(currentIndex))) {
+    if (this.isLeft(this.heapList.get(currentIndex))) {
       return (currentIndex - 1) / 2;
     } else {
       return (currentIndex / 2) - 1;
@@ -199,7 +198,7 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
   }
 
   private int getAdjacentIndex(int currentIndex) {
-    if (isLeft(this.heapList.get(currentIndex))) {
+    if (this.isLeft(this.heapList.get(currentIndex))) {
       return currentIndex + 1;
     } else {
       return currentIndex - 1;
