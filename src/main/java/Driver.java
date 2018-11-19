@@ -7,7 +7,28 @@ public class Driver {
     alque.enqueue(2,2);
     alque.enqueue(3,1);
 
+
+
+
     System.out.println(alque.peek().getValue());
+    BHPPriorityQueue<Integer,Integer> bhpque = new BHPPriorityQueue<>();
+    BHPPriorityQueue<Integer,Integer> bhpque2 = new BHPPriorityQueue<>();
+
+    bhpque.enqueue(1,1);
+    bhpque.enqueue(2,2);
+    bhpque.enqueue(4,4);
+    bhpque.enqueue(3,3);
+    bhpque.enqueue(2,2);
+    bhpque.enqueue(3,3);
+    bhpque.dequeueMin();
+    bhpque2.enqueue(3,3);
+    
+
+    System.out.println(alque.peek().getValue());
+    for (Entry<Integer,Integer> i: bhpque.getQueue())
+    {
+      System.out.println(i.getKey());
+    }
 
   }
 }
