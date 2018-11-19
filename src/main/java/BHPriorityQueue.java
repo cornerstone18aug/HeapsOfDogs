@@ -114,13 +114,13 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
 
     // Swap bottom and top
     Entry<K, V> resultEntry = this.getEntry(0);
-    Entry<K, V> bottomEntry = this.getEntry(this.heapList.size() - 1);
-    this.heapList.remove(bottomEntry);
+    Entry<K, V> rootEntry = this.getEntry(this.heapList.size() - 1);
+    this.heapList.remove(rootEntry);
     // When isEmpty, List.set() causes Exception
     if (this.isEmpty()) {
       return resultEntry;
     } else {
-      this.heapList.set(0, bottomEntry);
+      this.heapList.set(0, rootEntry);
     }
 
     // Heapify down
@@ -131,7 +131,7 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
     Entry<K, V> rightChildEntry;
 
     while (true) {
-      currentIndex = this.getCurrentIndex(bottomEntry);
+      currentIndex = this.getCurrentIndex(rootEntry);
       // Get left child
       leftChildIndex = this.getLeftChildIndex(currentIndex);
       leftChildEntry = this.getEntry(leftChildIndex);
@@ -149,20 +149,20 @@ public class BHPriorityQueue<K extends Comparable, V> implements VCPriorityQueue
         } else {
           comparingChild = rightChildEntry;
         }
-        if (this.compare(comparingChild, bottomEntry) == CompResult.SMALLER) {
-          this.swap(comparingChild, bottomEntry);
+        if (this.compare(comparingChild, rootEntry) == CompResult.SMALLER) {
+          this.swap(comparingChild, rootEntry);
         }
         break;
       }
 
-      // Sort either left or right
+      // Swap parent and either left child  or right child
       switch (this.compare(leftChildEntry, rightChildEntry)) {
         case BIGGER:
         case EQUAL:
-          this.swap(rightChildEntry, bottomEntry);
+          this.swap(rightChildEntry, rootEntry);
           break;
         case SMALLER:
-          this.swap(leftChildEntry, bottomEntry);
+          this.swap(leftChildEntry, rootEntry);
           break;
       }
 
