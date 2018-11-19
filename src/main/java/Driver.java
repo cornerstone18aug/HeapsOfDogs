@@ -3,14 +3,14 @@ public class Driver {
     ALPriorityQueue<Integer,Integer> alque = new ALPriorityQueue<>();
 
 
-    alque.enqueue(1,5);
-    alque.enqueue(2,2);
-    alque.enqueue(3,1);
-
-
-
-
-    System.out.println(alque.peek().getValue());
+//    alque.enqueue(1,5);
+//    alque.enqueue(2,2);
+//    alque.enqueue(3,1);
+//
+//
+//
+//
+//    System.out.println(alque.peek().getValue());
     BHPPriorityQueue<Integer,Integer> bhpque = new BHPPriorityQueue<>();
     BHPPriorityQueue<Integer,Integer> bhpque2 = new BHPPriorityQueue<>();
 
@@ -20,11 +20,11 @@ public class Driver {
     bhpque.enqueue(3,3);
     bhpque.enqueue(2,2);
     bhpque.enqueue(3,3);
+    bhpque.enqueue(4,4);
     bhpque.dequeueMin();
     bhpque2.enqueue(3,3);
-    
 
-    System.out.println(alque.peek().getValue());
+
     for (Entry<Integer,Integer> i: bhpque.getQueue())
     {
       System.out.println(i.getKey());
